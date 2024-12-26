@@ -61,41 +61,78 @@ public ProductEntity SearchbyId(Long id) {
 }
 public void deleteProductbyId(Long id) {
 		productRepository.deleteById(id);
+	}
+//edit
+public ProductModel editProductById1( Long id) {
+Optional<ProductEntity> optionalData=productRepository.findById(id);
+if(optionalData.isPresent()) {
+ ProductEntity productEntity=optionalData.get();
+ ProductModel productModel=new ProductModel();
+ productModel.setName(productEntity.getName());
+ productModel.setBrand(productEntity.getBrand());
+ productModel.setMadeIn(productEntity.getMadeIn());
+ productModel.setPrice(productEntity.getPrice());
+ productModel.setQuantity(productEntity.getQuantity());
+ productModel.setDiscountrate(productEntity.getDiscountrate());
+ return productModel;
 }
-public void updateProduct(Long id,ProductModel productModel) {
-	  
-    Optional<ProductEntity> optionalData = productRepository.findById(id);     
-    if (optionalData.isPresent()) {
-   
-        ProductEntity entity = optionalData.get();
-
-       
-        double stockValue = productModel.getPrice() * productModel.getQuantity();
-        double discountPrice = productModel.getPrice() * productModel.getDiscountrate() / 100;
-        double offerPrice = productModel.getPrice() - discountPrice;
-        double taxPrice = offerPrice * 18 / 100; 
-        double finalPrice = offerPrice + taxPrice;
-
-       
-        entity.setName(productModel.getName());
-        entity.setBrand(productModel.getBrand());
-        entity.setMadeIn(productModel.getMadeIn());
-        entity.setPrice(productModel.getPrice());
-        entity.setQuantity(productModel.getQuantity());
-        entity.setDiscountrate(productModel.getDiscountrate());
-        entity.setStockValue(stockValue);
-        entity.setDiscountprice(discountPrice);
-        entity.setOfferPrice(offerPrice);
-        entity.setTaxprice(taxPrice);
-        entity.setFinalPrice(finalPrice);
-
-    
-        productRepository.save(entity);
-    } 
-
-
+else {
+ return null;
 }
+}
+//updateing the form
 
+public ProductModel  editProductById(Long id) {
+    Optional<ProductEntity> optionalData= productRepository.findById(id);
+    if(optionalData.isPresent())
+    {
+      ProductEntity product = optionalData.get();
+      
+      ProductModel productModel = new ProductModel();
+      productModel.setName(product.getName());
+      productModel.setBrand(product.getBrand());
+      productModel.setMadeIn(product.getMadeIn());
+      productModel.setPrice(product.getPrice());
+      productModel.setQuantity(product.getQuantity());
+      productModel.setDiscountrate(product.getDiscountrate());
+      return productModel;
+    }
+    else {
+      return null;
+    }
+  }
+  
+  public void updateProductById(Long id, ProductModel updatedProductModel, Model model) {
+      Optional<ProductEntity> optionalData = productRepository.findById(id);
+      if (optionalData.isPresent()) {
+          ProductEntity product = optionalData.get();
 
+          // Update product entity with new values from the model
+          product.setName(updatedProductModel.getName());
+          product.setBrand(updatedProductModel.getBrand());
+          product.setMadeIn(updatedProductModel.getMadeIn());
+          product.setPrice(updatedProductModel.getPrice());
+          product.setQuantity(updatedProductModel.getQuantity());
+          product.setDiscountrate(updatedProductModel.getDiscountrate());
+
+          // Save the updated product
+          ProductEntity updatedProduct = productRepository.save(product);
+
+          // Map updated product to ProductModel (if needed for further use)
+          ProductModel productModel = new ProductModel();
+          productModel.setName(updatedProduct.getName());
+          productModel.setBrand(updatedProduct.getBrand());
+          productModel.setMadeIn(updatedProduct.getMadeIn());
+          productModel.setPrice(updatedProduct.getPrice());
+          productModel.setQuantity(updatedProduct.getQuantity());
+          productModel.setDiscountrate(updatedProduct.getDiscountrate());
+
+          // Add updated ProductModel to the Model for the view
+          model.addAttribute("updatedProduct", productModel);
+      } else {
+          // Handle the case when the product with the given ID does not exist
+          model.addAttribute("errorMessage", "Product not found with ID: " + id);
+      }
+  }
 
 }

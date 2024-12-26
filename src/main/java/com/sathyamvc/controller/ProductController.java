@@ -8,16 +8,19 @@ import java.util.List;
 
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.sathyamvc.entity.ProductEntity;
 import com.sathyamvc.model.ProductModel;
 import com.sathyamvc.service.ProductService;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -68,5 +71,20 @@ public class ProductController
 		return "redirect:/getallproducts";
 		   
 	   }	   
-	   
+	   @GetMapping("/edit/{id}")
+	   public String showEditProductPage(@PathVariable("id") Long id,Model model) {
+	       ProductModel product = productService.editProductById(id); 
+	       model.addAttribute("product", product);
+	       model.addAttribute("id", id);
+	       return "editform";
+	   }
+	     @PostMapping("/editsaveproduct/{id}")
+	     public String updateProductById(
+	             @PathVariable("id") Long id,
+	             @ModelAttribute("productModel") ProductModel productModel,
+	             Model model) {
+	         // Pass the updated product data to the service layer
+	         productService.updateProductById(id, productModel, model);
+	         return "redirect:/getallproducts";
+	     }
 }

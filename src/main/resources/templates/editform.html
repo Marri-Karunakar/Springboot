@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Edit form</h1>
-    <form th:action="@{'/saveproduct/'+${id}}" th:object="${product}" method="post">
+    <form th:action="@{'/editsaveproduct/'+${id}}" th:object="${product}" method="post">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" th:field="*{name}" /><br/><br>
         
@@ -23,7 +23,7 @@
         <input type="number" name="quantity" th:field="*{quantity}" /><br/><br>
         
         
-        <label for="discountRate">DiscountRate:</label>
+        <label for="discountrate">DiscountRate:</label>
         <input type="number" name="discountrate" th:field="*{discountrate}" /><br/>
         
         <button type="submit">Submit</button>
